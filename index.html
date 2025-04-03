@@ -3,6 +3,16 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="theme-color"
+      media="(prefers-color-scheme: light)"
+      content="#f1f1f1"
+    />
+    <meta
+      name="theme-color"
+      media="(prefers-color-scheme: dark)"
+      content="#1a1a1d"
+    />
     <title>Prashant Giri</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -18,6 +28,57 @@
       referrerpolicy="no-referrer"
     />
     <style>
+      /* CSS remains identical to the previous "Subtle Light Sweep" version */
+      :root {
+        /* Default: Dark Mode */
+        --bg-color: #1a1a1d;
+        --card-bg-color: rgba(35, 35, 40, 0.75);
+        --text-color: #e0e0e0;
+        --text-muted-color: #a0a0a0;
+        --accent-color: #c3a1ff;
+        --accent-color-rgb: 195, 161, 255;
+        --accent-hover-bg: #7a42f4;
+        --border-color: rgba(255, 255, 255, 0.1);
+        --shadow-color: rgba(0, 0, 0, 0.5);
+        --scrollbar-thumb: var(--accent-hover-bg);
+        --scrollbar-track: #2a2a2e;
+        --button-bg: rgba(40, 40, 45, 0.85);
+        --button-hover-bg: rgba(60, 60, 65, 0.9);
+        --button-border: rgba(255, 255, 255, 0.1);
+        --button-shadow: rgba(0, 0, 0, 0.3);
+        --icon-color: #a0a0a0;
+        --icon-hover-color: var(--accent-color);
+        --now-playing-bg: rgba(30, 30, 35, 0.85);
+        --now-playing-border: rgba(255, 255, 255, 0.08);
+        --now-playing-shadow: rgba(0, 0, 0, 0.4);
+
+        --theme-transition-duration: 0.4s;
+      }
+
+      html.light-mode {
+        /* Light Mode Overrides */
+        --bg-color: #f4f4f8;
+        --card-bg-color: rgba(255, 255, 255, 0.8);
+        --text-color: #333333;
+        --text-muted-color: #666666;
+        --accent-color: #7a42f4;
+        --accent-color-rgb: 122, 66, 244;
+        --accent-hover-bg: #6a32e4;
+        --border-color: rgba(0, 0, 0, 0.1);
+        --shadow-color: rgba(100, 100, 120, 0.2);
+        --scrollbar-thumb: var(--accent-hover-bg);
+        --scrollbar-track: #e0e0e0;
+        --button-bg: rgba(230, 230, 235, 0.9);
+        --button-hover-bg: rgba(215, 215, 225, 1);
+        --button-border: rgba(0, 0, 0, 0.15);
+        --button-shadow: rgba(100, 100, 120, 0.15);
+        --icon-color: #777777;
+        --icon-hover-color: var(--accent-color);
+        --now-playing-bg: rgba(245, 245, 248, 0.9);
+        --now-playing-border: rgba(0, 0, 0, 0.1);
+        --now-playing-shadow: rgba(100, 100, 120, 0.15);
+      }
+
       *,
       *::before,
       *::after {
@@ -33,14 +94,16 @@
       }
       body {
         font-family: "Poppins", sans-serif;
-        background-color: #1a1a1d;
-        color: #f0f0f0;
+        background-color: var(--bg-color);
+        color: var(--text-color);
         display: flex;
         justify-content: center;
         align-items: center;
         flex-direction: column;
         text-align: center;
         position: relative;
+        transition: background-color var(--theme-transition-duration) ease,
+          color var(--theme-transition-duration) ease;
       }
       #particle-canvas {
         position: fixed;
@@ -62,7 +125,7 @@
         max-width: 900px;
         width: 90%;
         padding: 30px 40px;
-        background: rgba(26, 26, 29, 0.7);
+        background: var(--card-bg-color);
         backdrop-filter: blur(12px);
         border-radius: 15px;
         z-index: 1;
@@ -70,27 +133,32 @@
         transform: translateY(20px);
         animation: fadeInUpContent 1s ease-out forwards;
         animation-delay: 0.7s;
-        box-shadow: 0 10px 35px rgba(0, 0, 0, 0.5);
-        border: 1px solid rgba(255, 255, 255, 0.12);
+        box-shadow: 0 10px 35px var(--shadow-color);
+        border: 1px solid var(--border-color);
         max-height: 90vh;
         overflow-y: auto;
         scrollbar-width: thin;
-        scrollbar-color: #7a42f4 #2a2a2e;
+        scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+        transition: background-color var(--theme-transition-duration) ease,
+          border-color var(--theme-transition-duration) ease,
+          box-shadow var(--theme-transition-duration) ease;
       }
       .container::-webkit-scrollbar {
         width: 8px;
       }
       .container::-webkit-scrollbar-track {
-        background: #2a2a2e;
+        background: var(--scrollbar-track);
         border-radius: 4px;
+        transition: background-color var(--theme-transition-duration) ease;
       }
       .container::-webkit-scrollbar-thumb {
-        background-color: #7a42f4;
+        background-color: var(--scrollbar-thumb);
         border-radius: 4px;
-        border: 2px solid #2a2a2e;
+        border: 2px solid var(--scrollbar-track);
+        transition: background-color var(--theme-transition-duration) ease;
       }
       .container::-webkit-scrollbar-thumb:hover {
-        background-color: #9366ff;
+        background-color: var(--accent-color);
       }
       @keyframes fadeInUpContent {
         to {
@@ -102,19 +170,21 @@
         font-size: 2.8rem;
         font-weight: 600;
         margin-bottom: 15px;
-        color: #c3a1ff;
+        color: var(--accent-color);
         letter-spacing: 1px;
+        transition: color var(--theme-transition-duration) ease;
       }
       h2.section-title {
         font-size: 1.4rem;
         font-weight: 400;
-        color: #d1d1d1;
+        color: var(--text-color);
         margin-top: 40px;
         margin-bottom: 20px;
         letter-spacing: 0.5px;
         position: relative;
         display: inline-block;
         padding-bottom: 5px;
+        transition: color var(--theme-transition-duration) ease;
       }
       h2.section-title::after {
         content: "";
@@ -124,20 +194,23 @@
         transform: translateX(-50%);
         width: 50px;
         height: 2px;
-        background-color: rgba(195, 161, 255, 0.6);
+        background-color: var(--accent-color);
+        opacity: 0.6;
         border-radius: 1px;
+        transition: background-color var(--theme-transition-duration) ease;
       }
       p.intro {
         font-size: 1.1rem;
         line-height: 1.7;
-        color: #d1d1d1;
+        color: var(--text-muted-color);
         margin-bottom: 30px;
         max-width: 650px;
         margin-left: auto;
         margin-right: auto;
+        transition: color var(--theme-transition-duration) ease;
       }
 
-      /* --- Navigation / Links --- */
+      /* --- Navigation / Links (Using Subtle Light Sweep) --- */
       .link-section {
         display: flex;
         justify-content: center;
@@ -145,120 +218,103 @@
         flex-wrap: wrap;
         margin-bottom: 30px;
       }
-
       .nav-item {
-        background-color: rgba(40, 40, 45, 0.85); /* Slightly adjusted base */
+        background-color: var(--button-bg);
         padding: 14px 24px;
-        border-radius: 8px;
+        border-radius: 10px;
         text-decoration: none;
-        color: #b0b0b0; /* Slightly muted base text color */
+        color: var(--text-muted-color);
         font-weight: 400;
         font-size: 0.95rem;
-        border: 1px solid rgba(255, 255, 255, 0.1); /* Slightly more visible base border */
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2),
-          inset 0 1px 2px rgba(255, 255, 255, 0.05); /* Subtle inner shadow */
+        border: 1px solid var(--button-border);
+        box-shadow: 0 1px 3px var(--button-shadow),
+          inset 0 1px 2px rgba(255, 255, 255, 0.05);
         display: inline-flex;
         align-items: center;
         gap: 10px;
         position: relative;
         z-index: 1;
-        overflow: hidden; /* Clip the light sweep */
-        /* Transitions */
+        overflow: hidden;
         transition: color 0.6s cubic-bezier(0.23, 1, 0.32, 1),
-          /* Slightly longer color transition */ transform 0.5s
-            cubic-bezier(0.23, 1, 0.32, 1),
-          /* Smooth easing */ box-shadow 0.5s cubic-bezier(0.23, 1, 0.32, 1);
-
-        /* Entry animation */
+          background-color 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+          transform 0.5s cubic-bezier(0.23, 1, 0.32, 1),
+          box-shadow 0.5s cubic-bezier(0.23, 1, 0.32, 1),
+          border-color 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         opacity: 0;
         transform: translateY(15px);
         animation: fadeInUpItem 0.5s ease-out forwards;
         animation-fill-mode: both;
       }
-
       @keyframes fadeInUpItem {
         to {
           opacity: 1;
           transform: translateY(0);
         }
       }
-
-      /* Light Sweep Pseudo-element */
       .nav-item::before {
         content: "";
         position: absolute;
-        top: -10%; /* Start slightly above */
-        left: -150%; /* Start far left */
-        width: 80%; /* Width of the light beam */
-        height: 120%; /* Taller than the button */
-        /* Soft gradient - faint accent color */
+        top: -10%;
+        left: -150%;
+        width: 80%;
+        height: 120%;
         background: linear-gradient(
           90deg,
-          /* Vertical light beam */ rgba(195, 161, 255, 0) 0%,
-          /* Transparent edge */ rgba(195, 161, 255, 0.15) 50%,
-          /* Faint highlight */ rgba(195, 161, 255, 0) 100%
-            /* Transparent edge */
+          rgba(var(--accent-color-rgb), 0) 0%,
+          rgba(var(--accent-color-rgb), 0.15) 50%,
+          rgba(var(--accent-color-rgb), 0) 100%
         );
-        transform: skewX(-25deg); /* Angle the beam */
-        /* Blend mode to interact with text/icon */
-        mix-blend-mode: overlay; /* Try overlay, soft-light, or screen */
-        /* filter: blur(2px); /* Optional slight blur */
-
-        transition: left 0.7s cubic-bezier(0.23, 1, 0.32, 1); /* Smooth, slightly longer sweep */
-        z-index: 2; /* Needs to be above the background but ideally below text if possible without blend mode issues */
-        opacity: 0.8; /* Control intensity */
+        transform: skewX(-25deg);
+        mix-blend-mode: overlay;
+        transition: left 0.7s cubic-bezier(0.23, 1, 0.32, 1);
+        z-index: 0;
+        opacity: 0.8;
       }
-
       .nav-item:hover {
-        transform: translateY(-2px); /* Minimal lift */
-        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3); /* Refined hover shadow */
-        color: #ffffff; /* Brighten text fully on hover */
-        border-color: rgba(255, 255, 255, 0.15); /* Highlight border */
+        transform: translateY(-2px);
+        box-shadow: 0 6px 15px var(--button-shadow);
+        color: var(--text-color);
+        border-color: rgba(var(--accent-color-rgb), 0.2);
       }
-
-      /* Trigger Light Sweep on hover */
       .nav-item:hover::before {
-        left: 150%; /* Sweep fully across to the right */
+        left: 150%;
       }
-
-      /* Icon subtle animation */
       .nav-item i {
         display: inline-block;
-        transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1); /* Custom bounce/overshoot */
+        color: var(--icon-color);
         margin-right: 8px;
-        color: #909090; /* Muted icon color */
-        transition: color 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+        transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+          color 0.5s cubic-bezier(0.4, 0, 0.2, 1);
       }
       .nav-item:hover i {
-        transform: scale(1.1) rotate(-5deg); /* Subtle scale and tilt */
-        color: #c3a1ff; /* Make icon accent color on hover */
+        transform: rotate(-8deg);
+        color: var(--icon-hover-color);
       }
-
-      /* Resume button styling */
       .resume-button {
-        background-color: rgba(195, 161, 255, 0.1);
-        border-color: rgba(195, 161, 255, 0.3);
-        color: #c5b0e8; /* Lighter base text for resume */
+        background-color: rgba(var(--accent-color-rgb), 0.1);
+        border-color: rgba(var(--accent-color-rgb), 0.3);
+        color: var(--accent-color);
       }
       .resume-button i {
-        color: #b5a0d8; /* Lighter base icon */
-      }
-      .resume-button::before {
-        /* Use a slightly brighter/different color sweep if desired */
-        background: linear-gradient(
-          90deg,
-          rgba(220, 200, 255, 0) 0%,
-          rgba(220, 200, 255, 0.2) 50%,
-          rgba(220, 200, 255, 0) 100%
-        );
-        mix-blend-mode: screen; /* Screen often works well for light effects */
+        color: var(--accent-color);
       }
       .resume-button:hover {
-        color: #ffffff; /* White text on hover */
-        box-shadow: 0 6px 15px rgba(195, 161, 255, 0.2);
+        background-color: var(--accent-hover-bg);
+        color: #ffffff;
+        border-color: rgba(var(--accent-color-rgb), 0.5);
+        box-shadow: 0 6px 15px rgba(var(--accent-color-rgb), 0.25);
+      }
+      .resume-button::before {
+        background: linear-gradient(
+          90deg,
+          rgba(255, 255, 255, 0) 0%,
+          rgba(255, 255, 255, 0.15) 50%,
+          rgba(255, 255, 255, 0) 100%
+        );
+        mix-blend-mode: overlay; /* Use overlay or screen */
       }
       .resume-button:hover i {
-        color: #ffffff; /* White icon on hover */
+        color: #ffffff;
       }
 
       /* --- Social Links --- */
@@ -269,20 +325,115 @@
         gap: 30px;
       }
       .social-link {
-        color: #aaaaaa;
+        color: var(--text-muted-color);
         text-decoration: none;
         display: inline-block;
         font-size: 1.6rem;
-        transition: color 0.3s ease,
-          transform 0.4s cubic-bezier(0.25, 0.1, 0.25, 1);
+        transition: color 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+          transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
       }
       .social-link i {
         vertical-align: middle;
         display: block;
       }
       .social-link:hover {
-        color: #c3a1ff;
-        transform: scale(1.1) translateY(-4px) rotate(5deg);
+        color: var(--accent-color);
+        transform: scale(1.1) translateY(-3px);
+      }
+
+      /* --- Theme Toggle Button --- */
+      .theme-toggle {
+        position: fixed;
+        top: 20px;
+        right: 25px;
+        background-color: var(--button-bg);
+        color: var(--icon-color);
+        border: 1px solid var(--button-border);
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 1.1rem;
+        cursor: pointer;
+        box-shadow: 0 2px 5px var(--button-shadow);
+        z-index: 100;
+        transition: background-color var(--theme-transition-duration) ease,
+          color var(--theme-transition-duration) ease,
+          border-color var(--theme-transition-duration) ease,
+          box-shadow 0.3s ease, transform 0.3s ease;
+        opacity: 0;
+        animation: fadeInToggle 0.5s ease-out forwards;
+        animation-delay: 1.5s;
+      }
+      @keyframes fadeInToggle {
+        to {
+          opacity: 1;
+        }
+      }
+      .theme-toggle:hover {
+        background-color: var(--button-hover-bg);
+        color: var(--icon-hover-color);
+        transform: scale(1.1);
+        box-shadow: 0 4px 10px var(--button-shadow);
+      }
+      .theme-toggle .fa-sun {
+        display: none;
+      }
+      html.light-mode .theme-toggle .fa-sun {
+        display: inline-block;
+      }
+      html.light-mode .theme-toggle .fa-moon {
+        display: none;
+      }
+
+      /* --- Now Playing Indicator --- */
+      #now-playing {
+        position: fixed;
+        bottom: 15px;
+        left: 20px;
+        background-color: var(--now-playing-bg);
+        color: var(--text-muted-color);
+        border: 1px solid var(--now-playing-border);
+        border-radius: 8px;
+        padding: 8px 12px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 0.8rem;
+        box-shadow: 0 3px 8px var(--now-playing-shadow);
+        backdrop-filter: blur(5px);
+        z-index: 100;
+        max-width: 250px;
+        opacity: 0;
+        transform: translateY(10px);
+        transition: opacity 0.5s ease, transform 0.5s ease,
+          background-color var(--theme-transition-duration) ease,
+          color var(--theme-transition-duration) ease,
+          border-color var(--theme-transition-duration) ease,
+          box-shadow var(--theme-transition-duration) ease;
+        pointer-events: none;
+      }
+      #now-playing.visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
+      #now-playing i {
+        font-size: 0.9em;
+        margin-right: 2px;
+        color: var(--icon-color);
+        transition: color var(--theme-transition-duration) ease;
+      } /* Theme transition for icon */
+      #now-playing-text {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      #now-playing-text strong {
+        color: var(--text-color);
+        font-weight: 600;
+        transition: color var(--theme-transition-duration) ease;
       }
 
       /* --- Footer --- */
@@ -292,84 +443,19 @@
         left: 50%;
         transform: translateX(-50%);
         font-size: 0.8rem;
-        color: #888;
+        color: var(--text-muted-color);
         z-index: 1;
-        background: rgba(26, 26, 29, 0.65);
         padding: 5px 12px;
         border-radius: 8px;
         display: flex;
         align-items: center;
-        gap: 8px;
-        backdrop-filter: blur(5px);
-      }
-      #visitor-count-container {
-        display: inline-flex;
-        align-items: center;
-      }
-      #visitor-count-value {
-        font-weight: bold;
-        color: #aaa;
-        margin-left: 5px;
-        min-width: 10px;
-        display: inline-block;
-        text-align: left;
+        gap: 5px;
+        transition: color var(--theme-transition-duration) ease;
       }
       footer .separator {
-        color: #666;
-      }
-
-      /* Loading indicator */
-      #counter-loading {
-        display: inline-block;
-      }
-      .dot-flashing {
-        /* Styles remain the same */
-        position: relative;
-        width: 4px;
-        height: 4px;
-        border-radius: 50%;
-        background-color: #888;
-        color: #888;
-        animation: dotFlashing 1s infinite linear alternate;
-        animation-delay: 0.5s;
-        display: inline-block;
-        vertical-align: middle;
-      }
-      .dot-flashing::before,
-      .dot-flashing::after {
-        content: "";
-        display: inline-block;
-        position: absolute;
-        top: 0;
-      }
-      .dot-flashing::before {
-        left: -7px;
-        width: 4px;
-        height: 4px;
-        border-radius: 50%;
-        background-color: #888;
-        color: #888;
-        animation: dotFlashing 1s infinite alternate;
-        animation-delay: 0s;
-      }
-      .dot-flashing::after {
-        left: 7px;
-        width: 4px;
-        height: 4px;
-        border-radius: 50%;
-        background-color: #888;
-        color: #888;
-        animation: dotFlashing 1s infinite alternate;
-        animation-delay: 1s;
-      }
-      @keyframes dotFlashing {
-        0% {
-          background-color: #888;
-        }
-        50%,
-        100% {
-          background-color: rgba(136, 136, 136, 0.3);
-        }
+        color: var(--text-muted-color);
+        opacity: 0.5;
+        margin: 0 3px;
       }
 
       /* --- Responsive Design --- */
@@ -390,21 +476,17 @@
         .nav-item {
           padding: 12px 20px;
           font-size: 0.9rem;
-          color: #c0c0c0;
-        } /* Slightly brighter base text mobile */
-        /* Simplify hover on mobile */
-        .nav-item::before {
-          display: none;
-        } /* Hide light sweep */
+          border-radius: 8px;
+        }
         .nav-item:hover {
-          transform: translateY(-2px);
-          background-color: rgba(60, 60, 65, 0.9); /* Simple bg change */
-          color: #ffffff;
+          transform: translateY(-2px) scale(1.01);
+        }
+        .nav-item:hover::before {
+          display: none;
         }
         .nav-item:hover i {
           transform: scale(1.05) rotate(0deg);
-          color: #c3a1ff;
-        } /* Simple icon scale */
+        }
         .nav-item:active {
           transform: translateY(0);
         }
@@ -422,12 +504,26 @@
           font-size: 1.4rem;
         }
         .social-link:hover {
-          transform: scale(1.1) translateY(-2px) rotate(0deg);
+          transform: scale(1.1) translateY(-2px);
         }
         footer {
           font-size: 0.75rem;
-          gap: 6px;
+          gap: 4px;
           padding: 4px 10px;
+        }
+        .theme-toggle {
+          top: 15px;
+          right: 15px;
+          width: 36px;
+          height: 36px;
+          font-size: 1rem;
+        }
+        #now-playing {
+          left: 15px;
+          bottom: 10px;
+          padding: 6px 10px;
+          font-size: 0.75rem;
+          max-width: 200px;
         }
       }
       @media (max-width: 480px) {
@@ -474,18 +570,49 @@
         footer .separator {
           display: none;
         }
+        .theme-toggle {
+          top: 10px;
+          right: 10px;
+          width: 34px;
+          height: 34px;
+          font-size: 0.9rem;
+        }
+        #now-playing {
+          left: 10px;
+          bottom: 10px;
+          padding: 5px 8px;
+          font-size: 0.7rem;
+          max-width: 180px;
+          gap: 5px;
+        }
       }
     </style>
   </head>
-  <!-- Ensure GoatCounter code matches the span ID -->
-  <body data-goatcounter="https://prashant.goatcounter.com/count">
+  <body>
     <canvas id="particle-canvas"></canvas>
+
+    <!-- Theme Toggle Button -->
+    <button
+      id="theme-toggle-button"
+      class="theme-toggle"
+      title="Toggle theme"
+      aria-label="Toggle theme"
+    >
+      <i class="fas fa-moon"></i><i class="fas fa-sun"></i>
+    </button>
+
+    <!-- Now Playing Indicator -->
+    <div id="now-playing" aria-live="polite">
+      <i class="fa-brands fa-spotify"></i>
+      <!-- Default icon -->
+      <span id="now-playing-text">Loading music...</span>
+    </div>
 
     <div class="container">
       <h1>Prashant Giri</h1>
       <p class="intro">
         Welcome to my corner of the internet. Explore my work, thoughts, and
-        projects, or simply enjoy the interactive background.
+        projects, and feel free to get in touch.
       </p>
 
       <!-- Section 1: Explore -->
@@ -497,31 +624,27 @@
             target="_blank"
             class="nav-item"
           >
-            <i class="fa-solid fa-book-open"></i>
-            <span>Knowledge Base</span>
+            <i class="fa-solid fa-book-open"></i> <span>Knowledge Base</span>
           </a>
           <a
             href="https://blog.prashantgiri360.com.np"
             target="_blank"
             class="nav-item"
           >
-            <i class="fa-solid fa-newspaper"></i>
-            <span>Blog</span>
+            <i class="fa-solid fa-newspaper"></i> <span>Blog</span>
           </a>
           <a
             href="https://portfolio.prashantgiri360.com.np"
             target="_blank"
             class="nav-item"
           >
-            <i class="fa-solid fa-briefcase"></i>
-            <span>Portfolio</span>
+            <i class="fa-solid fa-briefcase"></i> <span>Portfolio</span>
           </a>
           <a
             href="mailto:contact@prashantgiri360.com.np?subject=Inquiry%20from%20prashantgiri360.com.np&body=Hello%20Prashant%2C%0A%0A..."
             class="nav-item resume-button"
           >
-            <i class="fa-solid fa-file-lines"></i>
-            <span>Request Resume</span>
+            <i class="fa-solid fa-file-lines"></i> <span>Request Resume</span>
           </a>
         </nav>
       </section>
@@ -535,16 +658,14 @@
             target="_blank"
             class="nav-item"
           >
-            <i class="fa-solid fa-bell"></i>
-            <span>DisAlert</span>
+            <i class="fa-solid fa-bell"></i> <span>DisAlert</span>
           </a>
           <a
             href="https://home.prashantgiri360.com.np"
             target="_blank"
             class="nav-item"
           >
-            <i class="fa-solid fa-house-laptop"></i>
-            <span>Homepage</span>
+            <i class="fa-solid fa-house-laptop"></i> <span>Homepage</span>
           </a>
         </div>
       </section>
@@ -593,34 +714,148 @@
     <footer>
       <span>© <span id="year"></span> Prashant Giri</span>
       <span class="separator">|</span>
-      <span id="visitor-count-container">
-        Visits:
-        <span id="visitor-count-value">
-          <span id="goatcounter-count-prashant">
-            <!-- Ensure ID matches body attribute -->
-            <span id="counter-loading" class="dot-flashing"></span>
-          </span>
-        </span>
-      </span>
+      <span>All rights reserved</span>
     </footer>
 
-    <!-- GoatCounter Count Script -->
-    <script
-      data-goatcounter-settings='{"no_onload": true, "allow_local": true}'
-      async
-      src="https://gc.zgo.at/count.js"
-    ></script>
-
     <script>
-      // Keep essential JS: Dynamic Year, Staggered Animation, Particle Canvas
       document.addEventListener("DOMContentLoaded", () => {
+        // --- Dynamic Year ---
         document.getElementById("year").textContent = new Date().getFullYear();
 
-        // GoatCounter handles the count - No JS fetch needed.
+        // --- Theme Toggle Functionality --- (Identical)
+        const themeToggleButton = document.getElementById(
+            "theme-toggle-button"
+          ),
+          htmlElement = document.documentElement;
+        const applyTheme = (theme) => {
+          htmlElement.classList.toggle("light-mode", theme === "light");
+          const lightMeta = document.querySelector(
+              'meta[media="(prefers-color-scheme: light)"]'
+            ),
+            darkMeta = document.querySelector(
+              'meta[media="(prefers-color-scheme: dark)"]'
+            );
+          if (lightMeta && darkMeta) {
+            const metaThemeColor = document.querySelector(
+              'meta[name="theme-color"]'
+            );
+            metaThemeColor.setAttribute(
+              "content",
+              theme === "light" ? lightMeta.content : darkMeta.content
+            );
+          }
+        };
+        const savedTheme = localStorage.getItem("theme"),
+          prefersDark = window.matchMedia(
+            "(prefers-color-scheme: dark)"
+          ).matches;
+        let currentTheme = savedTheme
+          ? savedTheme
+          : prefersDark
+          ? "dark"
+          : "light";
+        applyTheme(currentTheme);
+        themeToggleButton.addEventListener("click", () => {
+          currentTheme = htmlElement.classList.contains("light-mode")
+            ? "dark"
+            : "light";
+          applyTheme(currentTheme);
+          localStorage.setItem("theme", currentTheme);
+        });
 
-        const linkSections = document.querySelectorAll(".link-section");
-        const baseDelay = 1.2;
-        const staggerAmount = 0.1;
+        // --- Last.fm Now Playing (Using Official API) ---
+        const lastFmUsername = "llyr4472"; // <<< REPLACE WITH YOUR LAST.FM USERNAME
+        const lastFmApiKey = "bfbe12109a892eee37fa74a369f0bd00"; // <<< REPLACE WITH YOUR LAST.FM API KEY
+        const nowPlayingElement = document.getElementById("now-playing");
+        const nowPlayingTextElement =
+          document.getElementById("now-playing-text");
+        const nowPlayingIconElement = nowPlayingElement?.querySelector("i");
+
+        async function fetchNowPlaying() {
+          if (
+            !lastFmUsername ||
+            !lastFmApiKey ||
+            lastFmUsername === "YOUR_USERNAME" ||
+            lastFmApiKey === "YOUR_API_KEY"
+          ) {
+            console.warn("Last.fm username or API key not set.");
+            if (nowPlayingElement)
+              nowPlayingElement.classList.remove("visible");
+            return;
+          }
+
+          // Construct the official API URL
+          const apiUrl = `https://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=${lastFmUsername}&api_key=${lastFmApiKey}&format=json&limit=1`;
+          let displayData = null;
+
+          try {
+            const response = await fetch(apiUrl, { cache: "no-store" });
+            if (!response.ok) {
+              // Attempt to read error message from Last.fm if available
+              let errorDetails = `HTTP error! Status: ${response.status}`;
+              try {
+                const errorData = await response.json();
+                if (errorData && errorData.message) {
+                  errorDetails += ` - ${errorData.message}`;
+                }
+              } catch (e) {
+                /* Ignore if parsing error fails */
+              }
+              throw new Error(errorDetails);
+            }
+            const data = await response.json();
+
+            // Check if recenttracks and track array exist
+            if (
+              data.recenttracks &&
+              data.recenttracks.track &&
+              data.recenttracks.track.length > 0
+            ) {
+              const track = data.recenttracks.track[0]; // Get the most recent track
+
+              // Check if track is currently playing
+              const isNowPlaying =
+                track["@attr"] && track["@attr"].nowplaying === "true";
+
+              if (
+                isNowPlaying &&
+                track.name &&
+                track.artist &&
+                track.artist["#text"]
+              ) {
+                displayData = `Listening to <strong>${track.name}</strong> by ${track.artist["#text"]}`;
+                if (nowPlayingIconElement) {
+                  nowPlayingIconElement.className = "fa-brands fa-spotify"; // Or other logic based on source if available
+                }
+              }
+              // Optional: Show last played if NOT currently playing
+              // else if (!isNowPlaying && track.name && track.artist && track.artist["#text"]) {
+              //           displayData = `Last: <strong>${track.name}</strong> by ${track.artist["#text"]}`;
+              //            if (nowPlayingIconElement) nowPlayingIconElement.className = "fa-solid fa-music";
+              //       }
+            }
+          } catch (error) {
+            console.error("Error fetching Last.fm data:", error);
+            displayData = null;
+          }
+
+          // Update DOM
+          if (displayData && nowPlayingTextElement && nowPlayingElement) {
+            nowPlayingTextElement.innerHTML = displayData;
+            nowPlayingElement.classList.add("visible");
+          } else if (nowPlayingElement) {
+            nowPlayingElement.classList.remove("visible");
+          }
+        }
+
+        // Fetch initial data and set interval
+        fetchNowPlaying();
+        setInterval(fetchNowPlaying, 30000); // Refresh every 30 seconds
+
+        // --- Staggered Animation for Nav Items --- (Identical)
+        const linkSections = document.querySelectorAll(".link-section"),
+          baseDelay = 1,
+          staggerAmount = 0.08;
         linkSections.forEach((section) => {
           const items = section.querySelectorAll(".nav-item");
           items.forEach((item, index) => {
@@ -629,10 +864,11 @@
         });
 
         // --- Interactive Particle Canvas --- (Identical Code)
-        const canvas = document.getElementById("particle-canvas");
-        const ctx = canvas.getContext("2d");
-        let particles = [];
-        let canvasWidth, canvasHeight;
+        const canvas = document.getElementById("particle-canvas"),
+          ctx = canvas.getContext("2d");
+        let particles = [],
+          canvasWidth,
+          canvasHeight;
         const mouse = { x: null, y: null, radius: 100 };
         function resizeCanvas() {
           canvasWidth = canvas.width = window.innerWidth;
@@ -650,16 +886,16 @@
           mouse.y = null;
         });
         canvas.addEventListener("click", (event) => {
-          const clickX = event.clientX;
-          const clickY = event.clientY;
-          const pulseRadius = mouse.radius * 1.7;
+          const clickX = event.clientX,
+            clickY = event.clientY,
+            pulseRadius = mouse.radius * 1.7;
           particles.forEach((p) => {
-            const dx = clickX - p.x;
-            const dy = clickY - p.y;
-            const distance = Math.sqrt(dx * dx + dy * dy);
+            const dx = clickX - p.x,
+              dy = clickY - p.y,
+              distance = Math.sqrt(dx * dx + dy * dy);
             if (distance < pulseRadius) {
-              const angle = Math.atan2(dy, dx);
-              const force = (1 - distance / pulseRadius) * 0.8;
+              const angle = Math.atan2(dy, dx),
+                force = (1 - distance / pulseRadius) * 0.8;
               p.vx += Math.cos(angle) * force * 5;
               p.vy += Math.sin(angle) * force * 5;
               p.pulse = 0.85;
@@ -685,18 +921,18 @@
             this.pulseDecay = 0.03;
           }
           update() {
-            const dxMouse = mouse.x - this.x;
-            const dyMouse = mouse.y - this.y;
-            const distanceMouse =
-              mouse.x === null
-                ? Infinity
-                : Math.sqrt(dxMouse * dxMouse + dyMouse * dyMouse);
-            const maxInteractionDistance = mouse.radius;
-            let targetSize = this.baseSize;
-            let targetAlpha = this.baseAlpha;
-            let targetLightness = this.baseLightness;
-            let pushForceX = 0;
-            let pushForceY = 0;
+            const dxMouse = mouse.x - this.x,
+              dyMouse = mouse.y - this.y,
+              distanceMouse =
+                mouse.x === null
+                  ? Infinity
+                  : Math.sqrt(dxMouse * dxMouse + dyMouse * dyMouse),
+              maxInteractionDistance = mouse.radius;
+            let targetSize = this.baseSize,
+              targetAlpha = this.baseAlpha,
+              targetLightness = this.baseLightness,
+              pushForceX = 0,
+              pushForceY = 0;
             if (distanceMouse < maxInteractionDistance) {
               const proximity = 1 - distanceMouse / maxInteractionDistance;
               targetSize = this.baseSize + proximity * 3.5;
@@ -705,15 +941,15 @@
                 this.baseLightness + proximity * 20,
                 95
               );
-              const pushStrength = proximity * 0.05;
-              const angle = Math.atan2(dyMouse, dxMouse);
+              const pushStrength = proximity * 0.05,
+                angle = Math.atan2(dyMouse, dxMouse);
               pushForceX = -Math.cos(angle) * pushStrength;
               pushForceY = -Math.sin(angle) * pushStrength;
             }
             if (this.pulse > 0) {
               const pulseFactor = this.pulse;
               targetSize += pulseFactor * this.maxPulseEffect;
-              targetAlpha = Math.min(targetAlpha + pulseFactor * 0.8, 1.0);
+              targetAlpha = Math.min(targetAlpha + pulseFactor * 0.8, 1);
               targetLightness = Math.min(
                 targetLightness + pulseFactor * 25,
                 98
@@ -745,29 +981,29 @@
         }
         function initParticles() {
           particles = [];
-          const particleDensityFactor = 19000;
-          const numParticles = Math.floor(
-            (canvasWidth * canvasHeight) / particleDensityFactor
-          );
-          const minParticles = 70;
-          const maxParticles = 300;
-          const count = Math.max(
-            minParticles,
-            Math.min(maxParticles, numParticles)
-          );
+          const particleDensityFactor = 19e3,
+            numParticles = Math.floor(
+              (canvasWidth * canvasHeight) / particleDensityFactor
+            ),
+            minParticles = 70,
+            maxParticles = 300,
+            count = Math.max(
+              minParticles,
+              Math.min(maxParticles, numParticles)
+            );
           for (let i = 0; i < count; i++) {
             particles.push(new Particle());
           }
         }
         function connectParticles() {
-          const maxConnectionDist = 120;
-          const maxCursorDist = mouse.radius * 1.5;
+          const maxConnectionDist = 120,
+            maxCursorDist = mouse.radius * 1.5;
           ctx.lineWidth = 0.8;
           for (let a = 0; a < particles.length; a++) {
             for (let b = a + 1; b < particles.length; b++) {
-              const dx = particles[a].x - particles[b].x;
-              const dy = particles[a].y - particles[b].y;
-              const distance = Math.sqrt(dx * dx + dy * dy);
+              const dx = particles[a].x - particles[b].x,
+                dy = particles[a].y - particles[b].y,
+                distance = Math.sqrt(dx * dx + dy * dy);
               if (distance < maxConnectionDist) {
                 const opacity =
                   (1 - distance / maxConnectionDist) *
@@ -787,18 +1023,16 @@
               }
             }
             if (mouse.x !== null) {
-              const dxMouse = particles[a].x - mouse.x;
-              const dyMouse = particles[a].y - mouse.y;
-              const distanceMouse = Math.sqrt(
-                dxMouse * dxMouse + dyMouse * dyMouse
-              );
+              const dxMouse = particles[a].x - mouse.x,
+                dyMouse = particles[a].y - mouse.y,
+                distanceMouse = Math.sqrt(
+                  dxMouse * dxMouse + dyMouse * dyMouse
+                );
               if (distanceMouse < maxCursorDist) {
                 const opacity =
-                  (1 - distanceMouse / maxCursorDist) *
-                  particles[a].alpha *
-                  1.0;
+                  (1 - distanceMouse / maxCursorDist) * particles[a].alpha * 1;
                 if (opacity > 0.07) {
-                  ctx.lineWidth = 1.0;
+                  ctx.lineWidth = 1;
                   ctx.strokeStyle = `hsla(${particles[a].baseHue}, ${
                     particles[a].baseSaturation + 12
                   }%, ${particles[a].lightness + 8}%, ${opacity})`;
@@ -822,7 +1056,7 @@
           requestAnimationFrame(animate);
         }
         resizeCanvas();
-        animate(0); // Initialize and start animation
+        animate(0);
       });
     </script>
   </body>
