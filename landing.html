@@ -1,0 +1,829 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Prashant Giri | Digital Hub</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+      integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <style>
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      html,
+      body {
+        height: 100%;
+        width: 100%;
+        overflow: hidden;
+      }
+      body {
+        font-family: "Poppins", sans-serif;
+        background-color: #1a1a1d;
+        color: #f0f0f0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        text-align: center;
+        position: relative;
+      }
+      #particle-canvas {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -1;
+        opacity: 0;
+        animation: fadeInCanvas 2s ease-out forwards;
+        animation-delay: 0.5s;
+      }
+      @keyframes fadeInCanvas {
+        to {
+          opacity: 1;
+        }
+      }
+      .container {
+        max-width: 900px;
+        width: 90%;
+        padding: 30px 40px;
+        background: rgba(26, 26, 29, 0.7);
+        backdrop-filter: blur(12px);
+        border-radius: 15px;
+        z-index: 1;
+        opacity: 0;
+        transform: translateY(20px);
+        animation: fadeInUpContent 1s ease-out forwards;
+        animation-delay: 0.7s;
+        box-shadow: 0 10px 35px rgba(0, 0, 0, 0.5);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        max-height: 90vh;
+        overflow-y: auto;
+        scrollbar-width: thin;
+        scrollbar-color: #7a42f4 #2a2a2e;
+      }
+      .container::-webkit-scrollbar {
+        width: 8px;
+      }
+      .container::-webkit-scrollbar-track {
+        background: #2a2a2e;
+        border-radius: 4px;
+      }
+      .container::-webkit-scrollbar-thumb {
+        background-color: #7a42f4;
+        border-radius: 4px;
+        border: 2px solid #2a2a2e;
+      }
+      .container::-webkit-scrollbar-thumb:hover {
+        background-color: #9366ff;
+      }
+      @keyframes fadeInUpContent {
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      h1 {
+        font-size: 2.8rem;
+        font-weight: 600;
+        margin-bottom: 15px;
+        color: #c3a1ff;
+        letter-spacing: 1px;
+      }
+      h2.section-title {
+        font-size: 1.4rem;
+        font-weight: 400;
+        color: #d1d1d1;
+        margin-top: 40px;
+        margin-bottom: 20px;
+        letter-spacing: 0.5px;
+        position: relative;
+        display: inline-block;
+        padding-bottom: 5px;
+      }
+      h2.section-title::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 50px;
+        height: 2px;
+        background-color: rgba(195, 161, 255, 0.6);
+        border-radius: 1px;
+      }
+      p.intro {
+        font-size: 1.1rem;
+        line-height: 1.7;
+        color: #d1d1d1;
+        margin-bottom: 30px;
+        max-width: 650px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      /* --- Navigation / Links --- */
+      .link-section {
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        flex-wrap: wrap;
+        margin-bottom: 30px;
+      }
+
+      .nav-item {
+        background-color: rgba(40, 40, 45, 0.85); /* Slightly adjusted base */
+        padding: 14px 24px;
+        border-radius: 8px;
+        text-decoration: none;
+        color: #b0b0b0; /* Slightly muted base text color */
+        font-weight: 400;
+        font-size: 0.95rem;
+        border: 1px solid rgba(255, 255, 255, 0.1); /* Slightly more visible base border */
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2),
+          inset 0 1px 2px rgba(255, 255, 255, 0.05); /* Subtle inner shadow */
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        position: relative;
+        z-index: 1;
+        overflow: hidden; /* Clip the light sweep */
+        /* Transitions */
+        transition: color 0.6s cubic-bezier(0.23, 1, 0.32, 1),
+          /* Slightly longer color transition */ transform 0.5s
+            cubic-bezier(0.23, 1, 0.32, 1),
+          /* Smooth easing */ box-shadow 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+
+        /* Entry animation */
+        opacity: 0;
+        transform: translateY(15px);
+        animation: fadeInUpItem 0.5s ease-out forwards;
+        animation-fill-mode: both;
+      }
+
+      @keyframes fadeInUpItem {
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      /* Light Sweep Pseudo-element */
+      .nav-item::before {
+        content: "";
+        position: absolute;
+        top: -10%; /* Start slightly above */
+        left: -150%; /* Start far left */
+        width: 80%; /* Width of the light beam */
+        height: 120%; /* Taller than the button */
+        /* Soft gradient - faint accent color */
+        background: linear-gradient(
+          90deg,
+          /* Vertical light beam */ rgba(195, 161, 255, 0) 0%,
+          /* Transparent edge */ rgba(195, 161, 255, 0.15) 50%,
+          /* Faint highlight */ rgba(195, 161, 255, 0) 100%
+            /* Transparent edge */
+        );
+        transform: skewX(-25deg); /* Angle the beam */
+        /* Blend mode to interact with text/icon */
+        mix-blend-mode: overlay; /* Try overlay, soft-light, or screen */
+        /* filter: blur(2px); /* Optional slight blur */
+
+        transition: left 0.7s cubic-bezier(0.23, 1, 0.32, 1); /* Smooth, slightly longer sweep */
+        z-index: 2; /* Needs to be above the background but ideally below text if possible without blend mode issues */
+        opacity: 0.8; /* Control intensity */
+      }
+
+      .nav-item:hover {
+        transform: translateY(-2px); /* Minimal lift */
+        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3); /* Refined hover shadow */
+        color: #ffffff; /* Brighten text fully on hover */
+        border-color: rgba(255, 255, 255, 0.15); /* Highlight border */
+      }
+
+      /* Trigger Light Sweep on hover */
+      .nav-item:hover::before {
+        left: 150%; /* Sweep fully across to the right */
+      }
+
+      /* Icon subtle animation */
+      .nav-item i {
+        display: inline-block;
+        transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1); /* Custom bounce/overshoot */
+        margin-right: 8px;
+        color: #909090; /* Muted icon color */
+        transition: color 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+      }
+      .nav-item:hover i {
+        transform: scale(1.1) rotate(-5deg); /* Subtle scale and tilt */
+        color: #c3a1ff; /* Make icon accent color on hover */
+      }
+
+      /* Resume button styling */
+      .resume-button {
+        background-color: rgba(195, 161, 255, 0.1);
+        border-color: rgba(195, 161, 255, 0.3);
+        color: #c5b0e8; /* Lighter base text for resume */
+      }
+      .resume-button i {
+        color: #b5a0d8; /* Lighter base icon */
+      }
+      .resume-button::before {
+        /* Use a slightly brighter/different color sweep if desired */
+        background: linear-gradient(
+          90deg,
+          rgba(220, 200, 255, 0) 0%,
+          rgba(220, 200, 255, 0.2) 50%,
+          rgba(220, 200, 255, 0) 100%
+        );
+        mix-blend-mode: screen; /* Screen often works well for light effects */
+      }
+      .resume-button:hover {
+        color: #ffffff; /* White text on hover */
+        box-shadow: 0 6px 15px rgba(195, 161, 255, 0.2);
+      }
+      .resume-button:hover i {
+        color: #ffffff; /* White icon on hover */
+      }
+
+      /* --- Social Links --- */
+      .socials {
+        margin-top: 35px;
+        display: flex;
+        justify-content: center;
+        gap: 30px;
+      }
+      .social-link {
+        color: #aaaaaa;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 1.6rem;
+        transition: color 0.3s ease,
+          transform 0.4s cubic-bezier(0.25, 0.1, 0.25, 1);
+      }
+      .social-link i {
+        vertical-align: middle;
+        display: block;
+      }
+      .social-link:hover {
+        color: #c3a1ff;
+        transform: scale(1.1) translateY(-4px) rotate(5deg);
+      }
+
+      /* --- Footer --- */
+      footer {
+        position: fixed;
+        bottom: 10px;
+        left: 50%;
+        transform: translateX(-50%);
+        font-size: 0.8rem;
+        color: #888;
+        z-index: 1;
+        background: rgba(26, 26, 29, 0.65);
+        padding: 5px 12px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        backdrop-filter: blur(5px);
+      }
+      #visitor-count-container {
+        display: inline-flex;
+        align-items: center;
+      }
+      #visitor-count-value {
+        font-weight: bold;
+        color: #aaa;
+        margin-left: 5px;
+        min-width: 10px;
+        display: inline-block;
+        text-align: left;
+      }
+      footer .separator {
+        color: #666;
+      }
+
+      /* Loading indicator */
+      #counter-loading {
+        display: inline-block;
+      }
+      .dot-flashing {
+        /* Styles remain the same */
+        position: relative;
+        width: 4px;
+        height: 4px;
+        border-radius: 50%;
+        background-color: #888;
+        color: #888;
+        animation: dotFlashing 1s infinite linear alternate;
+        animation-delay: 0.5s;
+        display: inline-block;
+        vertical-align: middle;
+      }
+      .dot-flashing::before,
+      .dot-flashing::after {
+        content: "";
+        display: inline-block;
+        position: absolute;
+        top: 0;
+      }
+      .dot-flashing::before {
+        left: -7px;
+        width: 4px;
+        height: 4px;
+        border-radius: 50%;
+        background-color: #888;
+        color: #888;
+        animation: dotFlashing 1s infinite alternate;
+        animation-delay: 0s;
+      }
+      .dot-flashing::after {
+        left: 7px;
+        width: 4px;
+        height: 4px;
+        border-radius: 50%;
+        background-color: #888;
+        color: #888;
+        animation: dotFlashing 1s infinite alternate;
+        animation-delay: 1s;
+      }
+      @keyframes dotFlashing {
+        0% {
+          background-color: #888;
+        }
+        50%,
+        100% {
+          background-color: rgba(136, 136, 136, 0.3);
+        }
+      }
+
+      /* --- Responsive Design --- */
+      @media (max-width: 768px) {
+        h1 {
+          font-size: 2.2rem;
+        }
+        h2.section-title {
+          font-size: 1.3rem;
+          margin-top: 30px;
+        }
+        p.intro {
+          font-size: 1rem;
+        }
+        .link-section {
+          gap: 15px;
+        }
+        .nav-item {
+          padding: 12px 20px;
+          font-size: 0.9rem;
+          color: #c0c0c0;
+        } /* Slightly brighter base text mobile */
+        /* Simplify hover on mobile */
+        .nav-item::before {
+          display: none;
+        } /* Hide light sweep */
+        .nav-item:hover {
+          transform: translateY(-2px);
+          background-color: rgba(60, 60, 65, 0.9); /* Simple bg change */
+          color: #ffffff;
+        }
+        .nav-item:hover i {
+          transform: scale(1.05) rotate(0deg);
+          color: #c3a1ff;
+        } /* Simple icon scale */
+        .nav-item:active {
+          transform: translateY(0);
+        }
+
+        .container {
+          width: 92%;
+          padding: 25px;
+          margin: 20px 0;
+          max-height: 85vh;
+        }
+        .socials {
+          gap: 25px;
+        }
+        .social-link {
+          font-size: 1.4rem;
+        }
+        .social-link:hover {
+          transform: scale(1.1) translateY(-2px) rotate(0deg);
+        }
+        footer {
+          font-size: 0.75rem;
+          gap: 6px;
+          padding: 4px 10px;
+        }
+      }
+      @media (max-width: 480px) {
+        h1 {
+          font-size: 1.9rem;
+        }
+        h2.section-title {
+          font-size: 1.2rem;
+        }
+        p.intro {
+          font-size: 0.9rem;
+          line-height: 1.6;
+        }
+        .link-section {
+          flex-direction: column;
+          align-items: center;
+          gap: 12px;
+        }
+        .nav-item {
+          width: 85%;
+          text-align: center;
+          justify-content: center;
+        }
+        .container {
+          width: 95%;
+          margin: 15px 0;
+          padding: 20px;
+          max-height: 80vh;
+        }
+        .socials {
+          gap: 22px;
+        }
+        .social-link {
+          font-size: 1.3rem;
+        }
+        footer {
+          flex-direction: row;
+          flex-wrap: wrap;
+          justify-content: center;
+          gap: 5px 10px;
+          width: 90%;
+          padding: 5px 8px;
+        }
+        footer .separator {
+          display: none;
+        }
+      }
+    </style>
+  </head>
+  <!-- Ensure GoatCounter code matches the span ID -->
+  <body data-goatcounter="https://prashant.goatcounter.com/count">
+    <canvas id="particle-canvas"></canvas>
+
+    <div class="container">
+      <h1>Prashant Giri</h1>
+      <p class="intro">
+        Welcome to my corner of the internet. Explore my work, thoughts, and
+        projects, or simply enjoy the interactive background.
+      </p>
+
+      <!-- Section 1: Explore -->
+      <section>
+        <h2 class="section-title">Explore</h2>
+        <nav class="link-section">
+          <a
+            href="https://knowledgebase.prashantgiri360.com.np"
+            target="_blank"
+            class="nav-item"
+          >
+            <i class="fa-solid fa-book-open"></i>
+            <span>Knowledge Base</span>
+          </a>
+          <a
+            href="https://blog.prashantgiri360.com.np"
+            target="_blank"
+            class="nav-item"
+          >
+            <i class="fa-solid fa-newspaper"></i>
+            <span>Blog</span>
+          </a>
+          <a
+            href="https://portfolio.prashantgiri360.com.np"
+            target="_blank"
+            class="nav-item"
+          >
+            <i class="fa-solid fa-briefcase"></i>
+            <span>Portfolio</span>
+          </a>
+          <a
+            href="mailto:contact@prashantgiri360.com.np?subject=Inquiry%20from%20prashantgiri360.com.np&body=Hello%20Prashant%2C%0A%0A..."
+            class="nav-item resume-button"
+          >
+            <i class="fa-solid fa-file-lines"></i>
+            <span>Request Resume</span>
+          </a>
+        </nav>
+      </section>
+
+      <!-- Section 2: Projects & Tools -->
+      <section>
+        <h2 class="section-title">Projects & Tools</h2>
+        <div class="link-section">
+          <a
+            href="https://disalert.prashantgiri360.com.np"
+            target="_blank"
+            class="nav-item"
+          >
+            <i class="fa-solid fa-bell"></i>
+            <span>DisAlert</span>
+          </a>
+          <a
+            href="https://home.prashantgiri360.com.np"
+            target="_blank"
+            class="nav-item"
+          >
+            <i class="fa-solid fa-house-laptop"></i>
+            <span>Homepage</span>
+          </a>
+        </div>
+      </section>
+
+      <!-- Social Media Links -->
+      <div class="socials">
+        <a
+          href="https://socials.prashantgiri360.com.np/github"
+          target="_blank"
+          class="social-link"
+          title="GitHub"
+          ><i class="fab fa-github"></i
+        ></a>
+        <a
+          href="https://socials.prashantgiri360.com.np/instagram"
+          target="_blank"
+          class="social-link"
+          title="Instagram"
+          ><i class="fab fa-instagram"></i
+        ></a>
+        <a
+          href="https://socials.prashantgiri360.com.np/discord"
+          target="_blank"
+          class="social-link"
+          title="Discord"
+          ><i class="fab fa-discord"></i
+        ></a>
+        <a
+          href="https://socials.prashantgiri360.com.np/email"
+          target="_blank"
+          class="social-link"
+          title="Email"
+          ><i class="fas fa-envelope"></i
+        ></a>
+        <a
+          href="https://socials.prashantgiri360.com.np/linkedin"
+          target="_blank"
+          class="social-link"
+          title="LinkedIn"
+          ><i class="fab fa-linkedin-in"></i
+        ></a>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+      <span>© <span id="year"></span> Prashant Giri</span>
+      <span class="separator">|</span>
+      <span id="visitor-count-container">
+        Visits:
+        <span id="visitor-count-value">
+          <span id="goatcounter-count-prashant">
+            <!-- Ensure ID matches body attribute -->
+            <span id="counter-loading" class="dot-flashing"></span>
+          </span>
+        </span>
+      </span>
+    </footer>
+
+    <!-- GoatCounter Count Script -->
+    <script
+      data-goatcounter-settings='{"no_onload": true, "allow_local": true}'
+      async
+      src="https://gc.zgo.at/count.js"
+    ></script>
+
+    <script>
+      // Keep essential JS: Dynamic Year, Staggered Animation, Particle Canvas
+      document.addEventListener("DOMContentLoaded", () => {
+        document.getElementById("year").textContent = new Date().getFullYear();
+
+        // GoatCounter handles the count - No JS fetch needed.
+
+        const linkSections = document.querySelectorAll(".link-section");
+        const baseDelay = 1.2;
+        const staggerAmount = 0.1;
+        linkSections.forEach((section) => {
+          const items = section.querySelectorAll(".nav-item");
+          items.forEach((item, index) => {
+            item.style.animationDelay = `${baseDelay + index * staggerAmount}s`;
+          });
+        });
+
+        // --- Interactive Particle Canvas --- (Identical Code)
+        const canvas = document.getElementById("particle-canvas");
+        const ctx = canvas.getContext("2d");
+        let particles = [];
+        let canvasWidth, canvasHeight;
+        const mouse = { x: null, y: null, radius: 100 };
+        function resizeCanvas() {
+          canvasWidth = canvas.width = window.innerWidth;
+          canvasHeight = canvas.height = window.innerHeight;
+          mouse.radius = Math.min(canvasWidth, canvasHeight) / 7.5;
+          initParticles();
+        }
+        window.addEventListener("resize", resizeCanvas);
+        window.addEventListener("mousemove", (event) => {
+          mouse.x = event.clientX;
+          mouse.y = event.clientY;
+        });
+        window.addEventListener("mouseout", () => {
+          mouse.x = null;
+          mouse.y = null;
+        });
+        canvas.addEventListener("click", (event) => {
+          const clickX = event.clientX;
+          const clickY = event.clientY;
+          const pulseRadius = mouse.radius * 1.7;
+          particles.forEach((p) => {
+            const dx = clickX - p.x;
+            const dy = clickY - p.y;
+            const distance = Math.sqrt(dx * dx + dy * dy);
+            if (distance < pulseRadius) {
+              const angle = Math.atan2(dy, dx);
+              const force = (1 - distance / pulseRadius) * 0.8;
+              p.vx += Math.cos(angle) * force * 5;
+              p.vy += Math.sin(angle) * force * 5;
+              p.pulse = 0.85;
+            }
+          });
+        });
+        class Particle {
+          constructor() {
+            this.x = Math.random() * canvasWidth;
+            this.y = Math.random() * canvasHeight;
+            this.size = Math.random() * 2.8 + 1.2;
+            this.baseSize = this.size;
+            this.vx = (Math.random() - 0.5) * 0.8;
+            this.vy = (Math.random() - 0.5) * 0.8;
+            this.baseHue = 270;
+            this.baseSaturation = 80;
+            this.baseLightness = 78;
+            this.baseAlpha = Math.random() * 0.6 + 0.3;
+            this.alpha = this.baseAlpha;
+            this.lightness = this.baseLightness;
+            this.pulse = 0;
+            this.maxPulseEffect = 6;
+            this.pulseDecay = 0.03;
+          }
+          update() {
+            const dxMouse = mouse.x - this.x;
+            const dyMouse = mouse.y - this.y;
+            const distanceMouse =
+              mouse.x === null
+                ? Infinity
+                : Math.sqrt(dxMouse * dxMouse + dyMouse * dyMouse);
+            const maxInteractionDistance = mouse.radius;
+            let targetSize = this.baseSize;
+            let targetAlpha = this.baseAlpha;
+            let targetLightness = this.baseLightness;
+            let pushForceX = 0;
+            let pushForceY = 0;
+            if (distanceMouse < maxInteractionDistance) {
+              const proximity = 1 - distanceMouse / maxInteractionDistance;
+              targetSize = this.baseSize + proximity * 3.5;
+              targetAlpha = Math.min(this.baseAlpha + proximity * 0.7, 0.98);
+              targetLightness = Math.min(
+                this.baseLightness + proximity * 20,
+                95
+              );
+              const pushStrength = proximity * 0.05;
+              const angle = Math.atan2(dyMouse, dxMouse);
+              pushForceX = -Math.cos(angle) * pushStrength;
+              pushForceY = -Math.sin(angle) * pushStrength;
+            }
+            if (this.pulse > 0) {
+              const pulseFactor = this.pulse;
+              targetSize += pulseFactor * this.maxPulseEffect;
+              targetAlpha = Math.min(targetAlpha + pulseFactor * 0.8, 1.0);
+              targetLightness = Math.min(
+                targetLightness + pulseFactor * 25,
+                98
+              );
+              this.pulse -= this.pulseDecay;
+              if (this.pulse < 0) this.pulse = 0;
+            }
+            const lerpFactor = 0.12;
+            this.size += (targetSize - this.size) * lerpFactor;
+            this.alpha += (targetAlpha - this.alpha) * lerpFactor;
+            this.lightness += (targetLightness - this.lightness) * lerpFactor;
+            this.vx += pushForceX;
+            this.vy += pushForceY;
+            this.vx *= 0.965;
+            this.vy *= 0.965;
+            this.x += this.vx;
+            this.y += this.vy;
+            if (this.x < -this.size) this.x = canvasWidth + this.size;
+            else if (this.x > canvasWidth + this.size) this.x = -this.size;
+            if (this.y < -this.size) this.y = canvasHeight + this.size;
+            else if (this.y > canvasHeight + this.size) this.y = -this.size;
+          }
+          draw(ctx) {
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, Math.max(0, this.size), 0, Math.PI * 2);
+            ctx.fillStyle = `hsla(${this.baseHue}, ${this.baseSaturation}%, ${this.lightness}%, ${this.alpha})`;
+            ctx.fill();
+          }
+        }
+        function initParticles() {
+          particles = [];
+          const particleDensityFactor = 19000;
+          const numParticles = Math.floor(
+            (canvasWidth * canvasHeight) / particleDensityFactor
+          );
+          const minParticles = 70;
+          const maxParticles = 300;
+          const count = Math.max(
+            minParticles,
+            Math.min(maxParticles, numParticles)
+          );
+          for (let i = 0; i < count; i++) {
+            particles.push(new Particle());
+          }
+        }
+        function connectParticles() {
+          const maxConnectionDist = 120;
+          const maxCursorDist = mouse.radius * 1.5;
+          ctx.lineWidth = 0.8;
+          for (let a = 0; a < particles.length; a++) {
+            for (let b = a + 1; b < particles.length; b++) {
+              const dx = particles[a].x - particles[b].x;
+              const dy = particles[a].y - particles[b].y;
+              const distance = Math.sqrt(dx * dx + dy * dy);
+              if (distance < maxConnectionDist) {
+                const opacity =
+                  (1 - distance / maxConnectionDist) *
+                  Math.min(particles[a].alpha, particles[b].alpha) *
+                  0.8;
+                if (opacity > 0.04) {
+                  ctx.strokeStyle = `hsla(${particles[a].baseHue}, ${
+                    particles[a].baseSaturation
+                  }%, ${
+                    (particles[a].lightness + particles[b].lightness) / 2 + 2
+                  }%, ${opacity})`;
+                  ctx.beginPath();
+                  ctx.moveTo(particles[a].x, particles[a].y);
+                  ctx.lineTo(particles[b].x, particles[b].y);
+                  ctx.stroke();
+                }
+              }
+            }
+            if (mouse.x !== null) {
+              const dxMouse = particles[a].x - mouse.x;
+              const dyMouse = particles[a].y - mouse.y;
+              const distanceMouse = Math.sqrt(
+                dxMouse * dxMouse + dyMouse * dyMouse
+              );
+              if (distanceMouse < maxCursorDist) {
+                const opacity =
+                  (1 - distanceMouse / maxCursorDist) *
+                  particles[a].alpha *
+                  1.0;
+                if (opacity > 0.07) {
+                  ctx.lineWidth = 1.0;
+                  ctx.strokeStyle = `hsla(${particles[a].baseHue}, ${
+                    particles[a].baseSaturation + 12
+                  }%, ${particles[a].lightness + 8}%, ${opacity})`;
+                  ctx.beginPath();
+                  ctx.moveTo(particles[a].x, particles[a].y);
+                  ctx.lineTo(mouse.x, mouse.y);
+                  ctx.stroke();
+                  ctx.lineWidth = 0.8;
+                }
+              }
+            }
+          }
+        }
+        function animate(currentTime) {
+          ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+          particles.forEach((particle) => {
+            particle.update();
+            particle.draw(ctx);
+          });
+          connectParticles();
+          requestAnimationFrame(animate);
+        }
+        resizeCanvas();
+        animate(0); // Initialize and start animation
+      });
+    </script>
+  </body>
+</html>
