@@ -6,7 +6,7 @@
     <description>Testing for SSRF and XSS without DTD</description>
     
     <item>
-      <title>SSRF & XSS Check</title>
+      <title>SSRF and XSS Check</title>
       <link>http://example.com</link>
       
       <!-- ATTACK 1: XSS -->
