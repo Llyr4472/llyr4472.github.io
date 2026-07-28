@@ -339,7 +339,7 @@
             metaColor.setAttribute("content", theme === "dark" ? "#121318" : "#f7f5f0");
           }
         };
-        const saved = localStorage.getItem("theme");
+        const saved = localStorage.getItem("theme_preference");
         let currentTheme = saved || "light";
         applyTheme(currentTheme);
 
@@ -347,7 +347,7 @@
           themeBtn.classList.add("spinning");
           currentTheme = html.classList.contains("dark-mode") ? "light" : "dark";
           applyTheme(currentTheme);
-          localStorage.setItem("theme", currentTheme);
+          localStorage.setItem("theme_preference", currentTheme);
         });
         themeBtn.addEventListener("animationend", () => {
           themeBtn.classList.remove("spinning");
