@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Manual Duplex Printing</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#fafaf8;--paper:#fff;--ink:#1d1f23;--mut:#6a6f78;--line:#e2e2dd;--acc:#27449a;--onacc:#fff;--ok:#1d7a46;--warn:#9a5b00;--err:#b3261e;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#131416;--paper:#1b1d20;--ink:#e9eaec;--mut:#9a9ea6;--line:#2c2e33;--acc:#93aaff;--onacc:#101218;--ok:#5ccb8b;--warn:#e3a94a;--err:#f2776e;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#131416;--paper:#1b1d20;--ink:#e9eaec;--mut:#9a9ea6;--line:#2c2e33;--acc:#93aaff;--onacc:#101218;--ok:#5ccb8b;--warn:#e3a94a;--err:#f2776e;color-scheme:dark}
+*{box-sizing:border-box}html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 "IBM Plex Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+main{max-width:680px;margin:0 auto;padding:40px 20px 72px}
+h1{font-size:28px;font-weight:600;letter-spacing:-.01em;margin:0 0 6px}
+h2{font-size:17px;font-weight:600;margin:0 0 14px}
+.lead{color:var(--mut);margin:0 0 36px;max-width:56ch}
+section{padding:28px 0;border-top:1px solid var(--line)}
+a{color:var(--acc)}
+:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+.drop{display:block;border:1.5px dashed var(--line);border-radius:6px;padding:30px 16px;text-align:center;color:var(--mut);cursor:pointer;background:var(--paper)}
+.drop:hover,.drop.on{border-color:var(--acc);color:var(--ink)}
+.small{font-size:14px;color:var(--mut);margin:10px 0 0}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:18px 24px}
+.full{grid-column:1/-1}
+label.f{display:flex;flex-direction:column;gap:6px;font-size:14px;color:var(--mut)}
+.f.nolab{gap:6px}
+input[type=text],input[type=number],select{font:inherit;color:var(--ink);background:var(--paper);border:1px solid var(--line);border-radius:6px;padding:9px 11px;width:100%}
+.seg{display:flex;gap:6px}
+.seg button{flex:1;font:inherit;color:var(--ink);background:var(--paper);border:1px solid var(--line);border-radius:6px;padding:9px 0;cursor:pointer}
+.seg button.on{background:var(--acc);border-color:var(--acc);color:var(--onacc)}
+details{margin-top:20px}summary{cursor:pointer;color:var(--ink);font-weight:500}
+details>div{margin-top:14px}
+.chk{display:flex;gap:10px;align-items:flex-start;margin:0 0 12px;font-size:15px}
+.chk input{margin-top:5px}.chk small{display:block;color:var(--mut);font-size:13px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:6px}
+.btn{font:inherit;font-weight:500;border:1px solid var(--acc);background:var(--acc);color:var(--onacc);padding:9px 18px;border-radius:6px;cursor:pointer}
+.link{font:inherit;border:0;background:none;color:var(--acc);padding:9px 6px;cursor:pointer;text-decoration:underline;text-underline-offset:3px}
+.pass{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;padding:14px 0}
+.pass b{display:block;font-weight:600}.pass span{font-size:14px;color:var(--mut)}
+.reload{border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:10px 0;margin:6px 0}
+.msg{font-size:14px;margin:10px 0 0}.msg.ok{color:var(--ok)}.msg.warn{color:var(--warn)}.msg.err{color:var(--err)}
+.tw{overflow-x:auto;margin-top:12px}table{border-collapse:collapse;width:100%;font-size:14px}
+th,td{text-align:left;padding:7px 14px 7px 0;border-bottom:1px solid var(--line);white-space:nowrap}th{color:var(--mut);font-weight:500}
+.hide{display:none}
+.stk{transform:translate(158px,45px);animation:stk 7s ease-in-out infinite}
+@keyframes stk{0%{transform:translate(158px,45px);opacity:0}6%,12%{transform:translate(158px,45px);opacity:1}24%{transform:translate(158px,6px)}44%{transform:translate(25px,6px)}66%{transform:translate(25px,195px)}82%{transform:translate(158px,195px)}94%{transform:translate(158px,195px);opacity:1}100%{transform:translate(158px,195px);opacity:0}}
+@media (prefers-reduced-motion:reduce){.stk{animation:none}}
+@media (max-width:520px){.grid,.two{grid-template-columns:1fr}main{padding-top:28px}}
+</style>
+</head>
+<body>
+<main>
+<h1>Manual duplex printing</h1>
+<p class="lead">Print double sided on a single sided printer. Backs always line up with their fronts, including 2 and 4 pages per sheet. Your file stays in your browser.</p>
+
+<section>
+<h2>Choose a PDF</h2>
+<label class="drop" id="drop">Drop a PDF here or tap to browse<input id="file" type="file" accept="application/pdf" class="hide"></label>
+<p class="small">No PDF handy? <a href="#" id="test">Open a 5 page test document</a> to check how your printer feeds paper.</p>
+<div id="loadmsg"></div>
+</section>
+
+<section class="hide" id="opts">
+<h2>Set up the sheets</h2>
+<div class="grid">
+<div class="f nolab full"><span style="font-size:14px;color:var(--mut)">Pages per side</span><div class="seg" id="nseg"><button data-n="1" class="on">1</button><button data-n="2">2</button><button data-n="4">4</button></div></div>
+<label class="f">Paper<select id="paper"><option value="a4">A4</option><option value="letter">Letter</option></select></label>
+<label class="f">Pages to print<input type="text" id="range" placeholder="All, or e.g. 1-5, 8, 10-12"></label>
+</div>
+<details>
+<summary>Printer options</summary>
+<div>
+<label class="chk"><input type="checkbox" id="revBacks" checked><span>Print backs in reverse order<small>Right for printers that deliver face down, like the LBP2900.</small></span></label>
+<label class="chk"><input type="checkbox" id="revFronts"><span>Print fronts in reverse order<small>Only for printers that deliver face up.</small></span></label>
+<label class="chk"><input type="checkbox" id="rot180"><span>Rotate backs 180 degrees<small>Turn on if backs come out upside down.</small></span></label>
+<label class="chk"><input type="checkbox" id="border"><span>Draw a border around each page</span></label>
+<div class="two">
+<label class="f">Margin (mm)<input type="number" id="margin" min="0" max="40" value="8"></label>
+<label class="f">Gap between pages (mm)<input type="number" id="gap" min="0" max="30" value="4"></label>
+</div>
+</div>
+</details>
+</section>
+
+<section class="hide" id="res">
+<h2>Print</h2>
+<div id="summary"></div>
+<p class="small" style="margin:0 0 6px">For both passes use Actual size, 1 page per sheet, duplex off.</p>
+<div class="pass"><div><b>Pass 1: fronts</b><span>Print this first</span></div><div><button class="btn" id="p1b">Print</button><button class="link" id="d1">Save PDF</button></div></div>
+<div class="reload">
+<svg viewBox="0 0 300 300" width="100%" style="max-width:300px;display:block;margin:0 auto;color:var(--ink)" role="img" aria-label="Take the printed stack from the top output tray and put it in the bottom input tray without rotating it">
+<rect x="90" y="30" width="180" height="250" rx="12" fill="var(--paper)" stroke="currentColor" stroke-width="1.5"/>
+<g fill="none" stroke="var(--mut)" stroke-width="1.5" stroke-dasharray="5 4"><rect x="105" y="40" width="150" height="75" rx="6"/><rect x="105" y="190" width="150" height="80" rx="6"/></g>
+<g fill="var(--mut)" font-size="12" text-anchor="middle"><text x="180" y="134">Output (top)</text><text x="180" y="182">Input (bottom)</text></g>
+<path d="M180 75V36H47V225H174M166 217l8 8-8 8" fill="none" stroke="var(--mut)" stroke-width="1.5" stroke-dasharray="3 5" opacity=".6"/>
+<g class="stk">
+<rect x="3" y="4" width="44" height="60" rx="2" fill="var(--bg)" stroke="currentColor" stroke-width="1.5"/>
+<rect x="0" y="0" width="44" height="60" rx="2" fill="var(--paper)" stroke="currentColor" stroke-width="1.5"/>
+<path d="M26 0h18v18z" fill="currentColor"/>
+</g>
+<text x="150" y="296" font-size="13" text-anchor="middle" fill="currentColor">Move the stack, no rotation, no flip</text>
+</svg>
+</div>
+<div class="pass"><div><b>Pass 2: backs</b><span>Print after reloading</span></div><div><button class="btn" id="p2b">Print</button><button class="link" id="d2">Save PDF</button></div></div>
+<div id="dlmsg"></div>
+<details>
+<summary>Sheet map</summary>
+<div class="tw"><table id="plan"></table></div>
+</details>
+</section>
+</main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+<script>
+const $=s=>document.querySelector(s);
+const {PDFDocument,rgb,degrees,StandardFonts}=PDFLib;
+const MM=72/25.4;
+const S={n:1,paper:'a4',margin:8,gap:4,border:false,revBacks:true,revFronts:false,rot180:false,range:''};
+let srcBytes=null,srcName='document',out=null,gen=0,dl=null,timer=null;
+
+try{const s=JSON.parse(localStorage.getItem('duplexSettings')||'null');if(s)Object.assign(S,s,{range:''})}catch(e){}
+function syncUI(){
+ document.querySelectorAll('#nseg button').forEach(b=>b.classList.toggle('on',+b.dataset.n===S.n));
+ $('#paper').value=S.paper;$('#margin').value=S.margin;$('#gap').value=S.gap;
+ ['border','revBacks','revFronts','rot180'].forEach(k=>$('#'+k).checked=S[k]);$('#range').value=S.range;
+}
+syncUI();
+function saveS(){try{localStorage.setItem('duplexSettings',JSON.stringify(S))}catch(e){}}
+
+if(window.claude&&claude.use){claude.use('downloads').then(m=>{dl=m}).catch(()=>{})}
+
+function msg(el,cls,t){$(el).innerHTML=t?'<p class="msg '+cls+'">'+t+'</p>':''}
+
+function parseRange(str,total){
+ if(!str.trim())return Array.from({length:total},(_,i)=>i);
+ const r=[];
+ for(const tok of str.split(',')){
+  const t=tok.trim();if(!t)continue;
+  const m=t.match(/^(\d+)(?:\s*-\s*(\d+))?$/);
+  if(!m)throw new Error('Cannot read “'+t+'” in the page range.');
+  const a=+m[1],b=m[2]?+m[2]:a;
+  if(a<1||b<1||a>total||b>total)throw new Error('Range “'+t+'” is outside 1 to '+total+'.');
+  if(a<=b)for(let i=a;i<=b;i++)r.push(i-1);else for(let i=a;i>=b;i--)r.push(i-1);
+ }
+ if(!r.length)throw new Error('The page range selects no pages.');
+ return r;
+}
+
+async function make(src,sideIdx,sides,isBack,g){
+ const doc=await PDFDocument.create();
+ const [pw,ph]=g.paper;
+ const uniq=[...new Set(sideIdx.flatMap(i=>sides[i]))];
+ const emb={};
+ if(uniq.length){const e=await doc.embedPdf(src,uniq);uniq.forEach((u,k)=>emb[u]=e[k])}
+ for(const si of sideIdx){
+  const page=doc.addPage([pw,ph]);
+  let T=g.vLand?(u,v)=>[pw-v,u]:(u,v)=>[u,v];
+  let ang=g.vLand?90:0;
+  if(isBack&&S.rot180){const t=T;T=(u,v)=>{const p=t(u,v);return [pw-p[0],ph-p[1]]};ang+=180}
+  sides[si].forEach((pi,k)=>{
+   const {width:w,height:h}=src.getPage(pi).getSize();
+   const col=k%g.cols,row=Math.floor(k/g.cols);
+   const cu=g.m+col*(g.cw+g.g),cv=g.vh-g.m-(row+1)*g.ch-row*g.g;
+   let sc=Math.min(g.cw/w,g.ch/h);if(S.n===1)sc=Math.min(sc,1);
+   const dw=w*sc,dh=h*sc,u0=cu+(g.cw-dw)/2,v0=cv+(g.ch-dh)/2;
+   const [x,y]=T(u0,v0);
+   page.drawPage(emb[pi],{x,y,width:dw,height:dh,rotate:degrees(ang%360)});
+   if(S.border){
+    const c=[[u0,v0],[u0+dw,v0],[u0+dw,v0+dh],[u0,v0+dh]].map(p=>T(p[0],p[1]));
+    for(let i=0;i<4;i++){const a=c[i],b=c[(i+1)%4];page.drawLine({start:{x:a[0],y:a[1]},end:{x:b[0],y:b[1]},thickness:.6,color:rgb(.45,.45,.45)})}
+   }
+  });
+ }
+ return doc.save();
+}
+
+async function build(){
+ if(!srcBytes)return;
+ const my=++gen;
+ try{
+  const src=await PDFDocument.load(srcBytes,{ignoreEncryption:true});
+  const total=src.getPageCount();
+  const idx=parseRange(S.range,total);
+  const n=S.n;
+  const f=src.getPage(idx[0]).getSize();
+  const srcLand=f.width>f.height;
+  const [pw,ph]=S.paper==='letter'?[612,792]:[595.28,841.89];
+  const vLand=(n===1&&srcLand)||(n===2&&!srcLand)||(n===4&&srcLand);
+  const vw=vLand?ph:pw,vh=vLand?pw:ph;
+  const cols=n===4?2:(n===2&&vLand?2:1),rows=n/cols;
+  const m=S.margin*MM,gp=S.gap*MM;
+  const g={paper:[pw,ph],vLand,vw,vh,cols,m,g:gp,cw:(vw-2*m-(cols-1)*gp)/cols,ch:(vh-2*m-(rows-1)*gp)/rows};
+  if(g.cw<20||g.ch<20)throw new Error('Margins and gap leave no room for the pages.');
+  const sides=[];for(let i=0;i<idx.length;i+=n)sides.push(idx.slice(i,i+n));
+  const padded=sides.length%2===1;
+  if(padded)sides.push([]);
+  const sheets=sides.length/2;
+  let fr=[],bk=[];for(let j=0;j<sheets;j++){fr.push(2*j);bk.push(2*j+1)}
+  if(S.revFronts)fr.reverse();
+  if(S.revBacks)bk.reverse();
+  const p1=await make(src,fr,sides,false,g),p2=await make(src,bk,sides,true,g);
+  if(my!==gen)return;
+  out={p1,p2};
+  renderPlan(sides,sheets,padded,idx.length);
+  msg('#loadmsg','','');
+ }catch(e){
+  if(my!==gen)return;
+  out=null;$('#res').classList.add('hide');
+  msg('#loadmsg','err',e.message||'Could not process this PDF.');
+ }
+}
+
+function lab(arr){return arr.length?arr.map(i=>i+1).join(' + '):'blank'}
+function renderPlan(sides,sheets,padded,count){
+ $('#res').classList.remove('hide');
+ const sidesN=sides.length-(padded?1:0);
+ let s='<p style="margin:0 0 6px">'+count+' page'+(count>1?'s':'')+' on '+sidesN+' side'+(sidesN>1?'s':'')+', '+sheets+' sheet'+(sheets>1?'s':'')+' of paper.</p>';
+ if(padded)s+='<p class="msg warn" style="margin:0 0 6px">The last back is blank so every back stays aligned with its front.</p>';
+ $('#summary').innerHTML=s;
+ let h='<tr><th>Sheet</th><th>Front</th><th>Back</th><th>Pass 1</th><th>Pass 2</th></tr>';
+ for(let j=0;j<sheets;j++){
+  const a=S.revFronts?sheets-j:j+1,b=S.revBacks?sheets-j:j+1;
+  h+='<tr><td>'+(j+1)+'</td><td>'+lab(sides[2*j])+'</td><td>'+lab(sides[2*j+1])+'</td><td>'+a+'</td><td>'+b+'</td></tr>';
+ }
+ $('#plan').innerHTML=h;
+}
+
+function sched(){clearTimeout(timer);timer=setTimeout(build,200)}
+
+async function load(bytes,name){
+ try{
+  const d=await PDFDocument.load(bytes,{ignoreEncryption:true});
+  srcBytes=bytes;srcName=name.replace(/\.pdf$/i,'')||'document';
+  $('#opts').classList.remove('hide');
+  msg('#loadmsg','ok',name+': '+d.getPageCount()+' pages loaded.');
+  S.range='';$('#range').value='';
+  build();
+ }catch(e){msg('#loadmsg','err','That file could not be read as a PDF. If it is password protected, remove the password first.')}
+}
+async function testDoc(){
+ const d=await PDFDocument.create(),f=await d.embedFont(StandardFonts.HelveticaBold);
+ for(let i=1;i<=5;i++){
+  const p=d.addPage([595.28,841.89]);
+  p.drawRectangle({x:20,y:20,width:555,height:802,borderWidth:2,borderColor:rgb(0,0,0)});
+  p.drawText('Page '+i,{x:150,y:420,size:70,font:f});
+  p.drawText('^ TOP ^',{x:230,y:780,size:28,font:f});
+ }
+ return d.save();
+}
+
+$('#file').addEventListener('change',async e=>{const f=e.target.files[0];if(f)load(new Uint8Array(await f.arrayBuffer()),f.name)});
+['dragover','dragenter'].forEach(ev=>$('#drop').addEventListener(ev,e=>{e.preventDefault();$('#drop').classList.add('on')}));
+['dragleave','drop'].forEach(ev=>$('#drop').addEventListener(ev,e=>{e.preventDefault();$('#drop').classList.remove('on')}));
+$('#drop').addEventListener('drop',async e=>{const f=e.dataTransfer.files[0];if(f)load(new Uint8Array(await f.arrayBuffer()),f.name)});
+$('#test').addEventListener('click',async e=>{e.preventDefault();load(await testDoc(),'test-document.pdf')});
+document.querySelectorAll('#nseg button').forEach(b=>b.addEventListener('click',()=>{S.n=+b.dataset.n;syncUI();saveS();sched()}));
+$('#paper').addEventListener('change',e=>{S.paper=e.target.value;saveS();sched()});
+$('#range').addEventListener('input',e=>{S.range=e.target.value;sched()});
+$('#margin').addEventListener('input',e=>{S.margin=Math.max(0,Math.min(40,+e.target.value||0));saveS();sched()});
+$('#gap').addEventListener('input',e=>{S.gap=Math.max(0,Math.min(30,+e.target.value||0));saveS();sched()});
+['border','revBacks','revFronts','rot180'].forEach(k=>$('#'+k).addEventListener('change',e=>{S[k]=e.target.checked;saveS();sched()}));
+
+async function save(which){
+ if(!out)return;
+ const name=srcName+(which===1?'-pass1-fronts.pdf':'-pass2-backs.pdf'),blob=new Blob([which===1?out.p1:out.p2],{type:'application/pdf'});
+ if(!dl){const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();a.remove();msg('#dlmsg','ok','Download started.');return}
+ try{await dl.save({filename:name,data:blob});msg('#dlmsg','ok','Saved.')}
+ catch(e){if(e&&e.code==='declined')return;msg('#dlmsg','err','Could not save the file ('+((e&&e.code)||'error')+').')}
+}
+function printPass(which){
+ if(!out)return;
+ const url=URL.createObjectURL(new Blob([which===1?out.p1:out.p2],{type:'application/pdf'}));
+ const fr=document.createElement('iframe');
+ fr.style.cssText='position:fixed;right:0;bottom:0;width:1px;height:1px;border:0;opacity:0';
+ fr.onload=()=>setTimeout(()=>{try{fr.contentWindow.focus();fr.contentWindow.print()}catch(e){if(!window.open(url,'_blank'))msg('#dlmsg','warn','Printing is blocked here. Save the PDF and print the file.')}},500);
+ fr.src=url;document.body.appendChild(fr);
+ msg('#dlmsg','ok','Print dialog opening. If nothing opens, save the PDF instead.');
+}
+$('#p1b').addEventListener('click',()=>printPass(1));
+$('#p2b').addEventListener('click',()=>printPass(2));
+$('#d1').addEventListener('click',()=>save(1));
+$('#d2').addEventListener('click',()=>save(2));
+</script>
+</body>
+</html>
