@@ -22,6 +22,7 @@ a{color:var(--acc)}
 :focus-visible{outline:2px solid var(--acc);outline-offset:2px}
 .drop{display:block;border:1.5px dashed var(--line);border-radius:6px;padding:30px 16px;text-align:center;color:var(--mut);cursor:pointer;background:var(--paper)}
 .drop:hover,.drop.on{border-color:var(--acc);color:var(--ink)}
+.drop.has{color:var(--ink);border-style:solid}.drop b{font-weight:600;word-break:break-all}
 .small{font-size:14px;color:var(--mut);margin:10px 0 0}
 .grid{display:grid;grid-template-columns:1fr 1fr;gap:18px 24px}
 .full{grid-column:1/-1}
@@ -58,7 +59,7 @@ th,td{text-align:left;padding:7px 14px 7px 0;border-bottom:1px solid var(--line)
 
 <section>
 <h2>Choose a PDF</h2>
-<label class="drop" id="drop">Drop a PDF here or tap to browse<input id="file" type="file" accept="application/pdf" class="hide"></label>
+<label class="drop" id="drop"><span id="dropt">Drop a PDF here or tap to browse</span><input id="file" type="file" accept="application/pdf" class="hide"></label>
 <p class="small">No PDF handy? <a href="#" id="test">Open a 5 page test document</a> to check how your printer feeds paper.</p>
 <div id="loadmsg"></div>
 </section>
@@ -236,7 +237,7 @@ async function load(bytes,name){
   const d=await PDFDocument.load(bytes,{ignoreEncryption:true});
   srcBytes=bytes;srcName=name.replace(/\.pdf$/i,'')||'document';
   $('#opts').classList.remove('hide');
-  msg('#loadmsg','ok',name+': '+d.getPageCount()+' pages loaded.');
+  $('#dropt').innerHTML='<b></b><br><span style="color:var(--mut);font-size:14px">'+d.getPageCount()+' pages. Tap to choose a different file.</span>';$('#dropt').querySelector('b').textContent=name;$('#drop').classList.add('has');
   S.range='';$('#range').value='';
   build();
  }catch(e){msg('#loadmsg','err','That file could not be read as a PDF. If it is password protected, remove the password first.')}
