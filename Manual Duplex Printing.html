@@ -153,10 +153,11 @@ async function make(src,sideIdx,sides,isBack,g){
  const doc=await PDFDocument.create();
  const [pw,ph]=g.paper;
  const uniq=[...new Set(sideIdx.flatMap(i=>sides[i]))];
- const emb={};
+ const emb={};const fnt=await doc.embedFont(StandardFonts.Helvetica);
  if(uniq.length){const e=await doc.embedPdf(src,uniq);uniq.forEach((u,k)=>emb[u]=e[k])}
  for(const si of sideIdx){
   const page=doc.addPage([pw,ph]);
+  if(!sides[si].length)page.drawText('blank page',{x:pw/2-18,y:40,size:7,font:fnt,color:rgb(.5,.5,.5)});
   let T=g.vLand?(u,v)=>[pw-v,u]:(u,v)=>[u,v];
   let ang=g.vLand?90:0;
   if(isBack&&S.rot180){const t=T;T=(u,v)=>{const p=t(u,v);return [pw-p[0],ph-p[1]]};ang+=180}
